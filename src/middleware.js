@@ -1,24 +1,33 @@
 // middleware.js
 import { NextResponse } from "next/server";
-import { verifyToken } from "./utils/verifyToken";
 
 export async function middleware(request) {
-  // const { pathname } = request.nextUrl;
+  // Handle preflight requests
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3002",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Credentials": "true",
+      },
+    });
+  }
 
-  // if (pathname.startsWith("/api/user")) {
-  //   return NextResponse.next();
-  // }
+  // Set CORS headers for other requests
+  const response = NextResponse.next();
+  response.headers.set("Access-Control-Allow-Origin", "http://localhost:3002");
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE"
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+  response.headers.set("Access-Control-Allow-Credentials", "true");
 
-  // const verification = await verifyToken(request); // 👉 wait for token verification
-
-  // if (!verification?.verified) {
-  //   return NextResponse.json(
-  //     { success: false, message: verification?.message || "Unauthorized" },
-  //     { status: 401 }
-  //   );
-  // }
-
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

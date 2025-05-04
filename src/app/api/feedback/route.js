@@ -1,19 +1,21 @@
-import { Banner } from "@/models/Banner";
+import { Feedback } from "@/models/Feedback";
 import { send_response } from "@/utils/apiResponse";
 import dbConnect from "@/lib/db";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { StatusCodes } from "@/helper/api/statusCode";
-import { ProductImages } from "@/models/Product_related_images";
 
-
-export const GET = asyncHandler(async (req) => {
+export const GET = asyncHandler(async () => {
   await dbConnect();
 
-  const banners = await Banner.find({ show_on_website: true });
+  const feedbacks = await Feedback.find({show_on_website: true})
+    .sort({ feedback_date: -1 })
+    .lean()
+    .exec();
+
   return send_response(
     true,
-    banners,
-    "Banners retrieved successfully",
+    feedbacks,
+    "All feedbacks fetched successfully.",
     StatusCodes.OK
   );
 });

@@ -5,29 +5,23 @@ import { asyncHandler } from "@/utils/asyncHandler";
 import { StatusCodes } from "@/helper/api/statusCode";
 import { ProductImages } from "@/models/Product_related_images";
 
-export const GET = asyncHandler(async () => {
+export const GET = asyncHandler(async (req) => {
   await dbConnect();
-
-  const productsWithImages = await Product.aggregate([
-    {
-      $match: {
-        show_on_website: true,
-      },
-    },
-    {
-      $lookup: {
-        from: "productimages",
-        localField: "_id",
-        foreignField: "product_id",
-        as: "product_images",
-      },
-    },
-  ]);
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  // console.log(searchParams)
+  // console.log(id);
+  const matchStage = {
+    show_on_website: true,
+    ...(id && { category_id: id }), // only include category_id match if id is present
+  };
+  // console.log("fweofhoweifh", matchStage.category_id);
+  const productsWithImages = await Product.find(matchStage);
 
   return send_response(
     true,
     productsWithImages,
-    "All products fetched successfully.",
+    "Products fetched successfully.",
     StatusCodes.OK
   );
 });

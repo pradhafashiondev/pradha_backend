@@ -8,7 +8,12 @@ import { ProductImages } from "@/models/Product_related_images";
 export const GET = asyncHandler(async () => {
   await dbConnect();
 
-  const productsWithImages = await Product.find({show_on_website: true});
+  const productsWithImages = await Product.find({
+    show_on_website: true,
+  }).populate({
+    path: "category_id",
+    select: "name", 
+  });
 
   return send_response(
     true,

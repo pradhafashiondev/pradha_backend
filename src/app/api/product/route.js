@@ -36,7 +36,10 @@ export const GET = asyncHandler(async (req) => {
 
   const total = await Product.countDocuments(matchStage);
   const totalPages = Math.ceil(total / limit);
-  const products = await Product.find(matchStage)
+  const products = await Product.find(matchStage).populate({
+    path: "category_id",
+    select: "name", 
+  })
     .sort(sortStage)
     .skip(skip)
     .limit(limit);

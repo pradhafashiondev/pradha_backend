@@ -8,16 +8,17 @@ export const GET = asyncHandler(async (req) => {
   await dbConnect();
   const { searchParams } = new URL(req.url);
 
-  const id = searchParams.get("id");
+  const category = searchParams.get("category");
   const page = Math.max(parseInt(searchParams.get("page")) || 1, 1);
   const limit = Math.max(parseInt(searchParams.get("limit")) || 10, 1);
   const searchTerm = searchParams.get("searchTerm");
+  const sortOption = searchParams.get("sortOption"); // 'asc' or 'desc'
 
   const skip = (page - 1) * limit;
 
   const matchStage = {
     show_on_website: true,
-    ...(id && { category_id: id }),
+    ...(category?.trim() ? { category_id: category } : {}), // ✅ skip if category is ""
   };
 
   if (searchTerm) {
@@ -25,9 +26,20 @@ export const GET = asyncHandler(async (req) => {
     matchStage.$or = [{ name: searchRegex }];
   }
 
+  // Sorting logic
+  const sortStage = {};
+  if (sortOption === "asc") {
+    sortStage.actual_price = 1;
+  } else if (sortOption === "desc") {
+    sortStage.actual_price = -1;
+  }
+
   const total = await Product.countDocuments(matchStage);
   const totalPages = Math.ceil(total / limit);
-  const products = await Product.find(matchStage).skip(skip).limit(limit);
+  const products = await Product.find(matchStage)
+    .sort(sortStage)
+    .skip(skip)
+    .limit(limit);
 
   return send_response(
     true,

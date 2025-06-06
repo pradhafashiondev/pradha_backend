@@ -15,6 +15,10 @@ const bannerSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    image_url_mobile: {
+      type: String,
+      trim: true
+    },
     show_on_website: {
       type: Boolean,
       default: true

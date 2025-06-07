@@ -4,12 +4,13 @@ import dbConnect from "@/lib/db";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { StatusCodes } from "@/helper/api/statusCode";
 import mongoose from "mongoose";
+import redis from "@/lib/redis";
+import { redis_expiry } from "@/helper/api/commonHelper";
 
-export const GET = asyncHandler(async (request,context) => {
+export const GET = asyncHandler(async (request, context) => {
   await dbConnect();
   const { id } = await context.params;
 
-  // Validate if ID is a valid MongoDB ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return send_response(
       false,
@@ -19,7 +20,18 @@ export const GET = asyncHandler(async (request,context) => {
     );
   }
 
-  // Aggregate product with its images
+  const cacheKey = `product_with_images_${id}`;
+  const cached = await redis.get(cacheKey);
+
+  if (cached) {
+    return send_response(
+      true,
+      JSON.parse(cached),
+      "Product fetched from cache.",
+      StatusCodes.OK
+    );
+  }
+
   const productWithImages = await Product.aggregate([
     {
       $match: {
@@ -29,7 +41,7 @@ export const GET = asyncHandler(async (request,context) => {
     },
     {
       $lookup: {
-        from: "productimages", 
+        from: "productimages",
         localField: "_id",
         foreignField: "product_id",
         as: "product_images",
@@ -37,7 +49,6 @@ export const GET = asyncHandler(async (request,context) => {
     },
   ]);
 
-  // Check if product exists
   if (productWithImages.length === 0) {
     return send_response(
       false,
@@ -47,7 +58,14 @@ export const GET = asyncHandler(async (request,context) => {
     );
   }
 
-  // Return the product data
+  if (redis_expiry === -1) {
+    await redis.set(cacheKey, JSON.stringify(productWithImages[0]));
+  } else {
+    await redis.set(cacheKey, JSON.stringify(productWithImages[0]), {
+      EX: redis_expiry,
+    });
+  }
+
   return send_response(
     true,
     productWithImages[0],

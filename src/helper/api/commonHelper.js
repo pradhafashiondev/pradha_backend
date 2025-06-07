@@ -1,0 +1,1 @@
+export const redis_expiry = Number(process.env.REDIS_EXPIRY);

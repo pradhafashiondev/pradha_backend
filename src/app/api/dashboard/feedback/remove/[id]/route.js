@@ -3,7 +3,7 @@ import { send_response } from "@/utils/apiResponse";
 import dbConnect from "@/lib/db";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { StatusCodes } from "@/helper/api/statusCode";
-import { delete_image } from "@/services/feedback/feedbackServices";
+// import { delete_image } from "@/services/feedback/feedbackServices";
 
 export const DELETE = asyncHandler(async (req, context) => {
   await dbConnect();

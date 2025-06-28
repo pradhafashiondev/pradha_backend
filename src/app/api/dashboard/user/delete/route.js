@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/db";
-import { User } from "lucide-react";
+// import { User } from "lucide-react";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { send_response } from "@/utils/apiResponse";
 import { StatusCodes } from "@/helper/api/statusCode";

@@ -5,7 +5,7 @@ import { asyncHandler } from "@/utils/asyncHandler";
 import { uploadFileToCloudinary } from "@/helper/api/uploadFileToCloudinary";
 import { StatusCodes } from "@/helper/api/statusCode";
 import { ProductImages } from "@/models/Product_related_images";
-import { deleteOnCloudinary } from "@/utils/cloudinary";
+// import { deleteOnCloudinary } from "@/utils/cloudinary";
 
 export const POST = asyncHandler(async(req)=>{
   await dbConnect();

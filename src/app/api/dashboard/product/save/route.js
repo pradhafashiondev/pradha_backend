@@ -6,7 +6,7 @@ import { uploadFileToCloudinary } from "@/helper/api/uploadFileToCloudinary";
 import { StatusCodes } from "@/helper/api/statusCode";
 import { ProductImages } from "@/models/Product_related_images";
 import { deleteOnCloudinary } from "@/utils/cloudinary";
-import { clearRedisKeysByPrefix } from "@/utils/clearRedisPrefix";
+// import { clearRedisKeysByPrefix } from "@/utils/clearRedisPrefix";
 
 export const POST = asyncHandler(async (req) => {
   await dbConnect();

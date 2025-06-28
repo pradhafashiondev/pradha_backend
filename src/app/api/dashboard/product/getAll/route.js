@@ -3,7 +3,7 @@ import { send_response } from "@/utils/apiResponse";
 import dbConnect from "@/lib/db";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { StatusCodes } from "@/helper/api/statusCode";
-import { NextRequest } from "next/server";
+// import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 
 export const GET = asyncHandler(async (req) => {

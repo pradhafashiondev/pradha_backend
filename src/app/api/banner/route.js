@@ -9,28 +9,28 @@ import { redis_expiry } from "@/helper/api/commonHelper";
 
 export const GET = asyncHandler(async (req) => {
   await dbConnect();
-  console.log("redis_expiry", redis_expiry);
-  const CACHE_KEY = "website_banners";
+  // console.log("redis_expiry", redis_expiry);
+  // const CACHE_KEY = "website_banners";
 
-  const cachedData = await redis.get(CACHE_KEY);
+  // const cachedData = await redis.get(CACHE_KEY);
 
-  if (cachedData) {
-    const banners = JSON.parse(cachedData);
-    return send_response(
-      true,
-      banners,
-      "Banners retrieved from cache",
-      StatusCodes.OK
-    );
-  }
+  // if (cachedData) {
+  //   const banners = JSON.parse(cachedData);
+  //   return send_response(
+  //     true,
+  //     banners,
+  //     "Banners retrieved from cache",
+  //     StatusCodes.OK
+  //   );
+  // }
 
   const banners = await Banner.find({ show_on_website: true });
 
-  if (redis_expiry === -1) {
-    await redis.set(CACHE_KEY, JSON.stringify(banners));
-  } else {
-    await redis.set(CACHE_KEY, JSON.stringify(banners), { EX: redis_expiry });
-  }
+  // if (redis_expiry === -1) {
+  //   await redis.set(CACHE_KEY, JSON.stringify(banners));
+  // } else {
+  //   await redis.set(CACHE_KEY, JSON.stringify(banners), { EX: redis_expiry });
+  // }
 
   return send_response(
     true,

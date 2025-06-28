@@ -19,17 +19,17 @@ export const GET = asyncHandler(async (req) => {
 
   const skip = (page - 1) * limit;
 
-  const cacheKey = `products_${category}_${page}_${limit}_${searchTerm}_${sortOption}`;
-  const cached = await redis.get(cacheKey);
+  // const cacheKey = `products_${category}_${page}_${limit}_${searchTerm}_${sortOption}`;
+  // const cached = await redis.get(cacheKey);
 
-  if (cached) {
-    return send_response(
-      true,
-      JSON.parse(cached),
-      "Products from cache",
-      StatusCodes.OK
-    );
-  }
+  // if (cached) {
+  //   return send_response(
+  //     true,
+  //     JSON.parse(cached),
+  //     "Products from cache",
+  //     StatusCodes.OK
+  //   );
+  // }
 
   const matchStage = {
     show_on_website: true,
@@ -59,11 +59,11 @@ export const GET = asyncHandler(async (req) => {
     pagination: { total, totalPages, currentPage: page, limit },
   };
 
-      if (redis_expiry === -1) {
-      await redis.set(cacheKey, JSON.stringify(response));
-    } else {
-      await redis.set(cacheKey, JSON.stringify(response), { EX: redis_expiry });
-    }
+    //   if (redis_expiry === -1) {
+    //   await redis.set(cacheKey, JSON.stringify(response));
+    // } else {
+    //   await redis.set(cacheKey, JSON.stringify(response), { EX: redis_expiry });
+    // }
 
   return send_response(true, response, "Products fetched", StatusCodes.OK);
 });

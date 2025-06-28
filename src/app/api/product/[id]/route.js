@@ -20,17 +20,17 @@ export const GET = asyncHandler(async (request, context) => {
     );
   }
 
-  const cacheKey = `product_with_images_${id}`;
-  const cached = await redis.get(cacheKey);
+  // const cacheKey = `product_with_images_${id}`;
+  // const cached = await redis.get(cacheKey);
 
-  if (cached) {
-    return send_response(
-      true,
-      JSON.parse(cached),
-      "Product fetched from cache.",
-      StatusCodes.OK
-    );
-  }
+  // if (cached) {
+  //   return send_response(
+  //     true,
+  //     JSON.parse(cached),
+  //     "Product fetched from cache.",
+  //     StatusCodes.OK
+  //   );
+  // }
 
   const productWithImages = await Product.aggregate([
     {
@@ -58,13 +58,13 @@ export const GET = asyncHandler(async (request, context) => {
     );
   }
 
-  if (redis_expiry === -1) {
-    await redis.set(cacheKey, JSON.stringify(productWithImages[0]));
-  } else {
-    await redis.set(cacheKey, JSON.stringify(productWithImages[0]), {
-      EX: redis_expiry,
-    });
-  }
+  // if (redis_expiry === -1) {
+  //   await redis.set(cacheKey, JSON.stringify(productWithImages[0]));
+  // } else {
+  //   await redis.set(cacheKey, JSON.stringify(productWithImages[0]), {
+  //     EX: redis_expiry,
+  //   });
+  // }
 
   return send_response(
     true,

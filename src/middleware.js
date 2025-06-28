@@ -6,8 +6,8 @@ export async function middleware(request) {
   if (request.method === "OPTIONS") {
     return new Response(null, {
       headers: {
-        // "Access-Control-Allow-Origin": "http://localhost:3001",
-        "Access-Control-Allow-Origin": "https://pradha-frontend.vercel.app",
+        "Access-Control-Allow-Origin": process.env.FRONTEND_URL || "http://localhost:3000",
+        // "Access-Control-Allow-Origin": "https://pradha-frontend.vercel.app",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "Access-Control-Allow-Credentials": "true",
@@ -19,7 +19,7 @@ export async function middleware(request) {
   const response = NextResponse.next();
   response.headers.set(
     "Access-Control-Allow-Origin",
-    "https://pradha-frontend.vercel.app"
+    process.env.FRONTEND_URL || "http://localhost:3000"
   );
   response.headers.set(
     "Access-Control-Allow-Methods",

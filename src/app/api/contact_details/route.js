@@ -14,17 +14,17 @@ export const GET = asyncHandler(async (req) => {
   const limit = Math.max(parseInt(searchParams.get("limit")) || 10, 1);
   const search = searchParams.get("search") || "";
 
-  const cacheKey = `contacts_page_${page}_limit_${limit}_search_${search}`;
+  // const cacheKey = `contacts_page_${page}_limit_${limit}_search_${search}`;
 
-  const cached = await redis.get(cacheKey);
-  if (cached) {
-    return send_response(
-      true,
-      JSON.parse(cached),
-      "Contacts retrieved from cache",
-      StatusCodes.OK
-    );
-  }
+  // const cached = await redis.get(cacheKey);
+  // if (cached) {
+  //   return send_response(
+  //     true,
+  //     JSON.parse(cached),
+  //     "Contacts retrieved from cache",
+  //     StatusCodes.OK
+  //   );
+  // }
 
   const filter = {};
   if (search) {
@@ -59,11 +59,11 @@ export const GET = asyncHandler(async (req) => {
     },
   };
 
-  if (redis_expiry === -1) {
-    await redis.set(cacheKey, JSON.stringify(result));
-  } else {
-    await redis.set(cacheKey, JSON.stringify(result), { EX: redis_expiry });
-  }
+  // if (redis_expiry === -1) {
+  //   await redis.set(cacheKey, JSON.stringify(result));
+  // } else {
+  //   await redis.set(cacheKey, JSON.stringify(result), { EX: redis_expiry });
+  // }
 
   return send_response(
     true,
